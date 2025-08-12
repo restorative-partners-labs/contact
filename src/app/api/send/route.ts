@@ -1,19 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { Resend } from 'resend';
-import { RateLimiterMemory } from 'rate-limiter-flexible';
 import { STAFF_BY_ID } from '@/data/staff';
-
-// Rate limiter: 5 requests per minute per IP + staffId combination
-const rateLimiter = new RateLimiterMemory({
-  keyGenerator: (req: any) => {
-    const ip = req.ip || 'unknown';
-    const staffId = req.body?.staffId || 'unknown';
-    return `${ip}:${staffId}`;
-  },
-  points: 5, // Number of requests
-  duration: 60, // Per 60 seconds
-} as any);
 
 // Validation schema
 const sendSchema = z.object({
@@ -90,10 +78,6 @@ Note: You can reply directly to this email to respond to ${payload.name}.
 
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting - simplified for now
-    // TODO: Implement proper rate limiting
-    
-
     // Parse and validate request body
     const body = await request.json();
     const payload = sendSchema.parse(body);
