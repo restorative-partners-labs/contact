@@ -1,9 +1,10 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { ContactForm } from '@/components/ContactForm';
 
-export default function FormPage() {
+function FormPageContent() {
   const searchParams = useSearchParams();
   const staffId = searchParams.get('sid');
   
@@ -25,9 +26,26 @@ export default function FormPage() {
   return (
     <div className="min-h-screen bg-neutral-50 py-12">
       <div className="mx-auto max-w-2xl px-4">
-        
         <ContactForm staffId={staffId} />
       </div>
     </div>
   );
 }
+
+export default function FormPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-neutral-50 py-12">
+        <div className="mx-auto max-w-2xl px-4 text-center">
+          <div className="animate-pulse">
+            <div className="h-8 bg-neutral-200 rounded mb-4"></div>
+            <div className="h-4 bg-neutral-200 rounded w-3/4 mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    }>
+      <FormPageContent />
+    </Suspense>
+  );
+}
+
